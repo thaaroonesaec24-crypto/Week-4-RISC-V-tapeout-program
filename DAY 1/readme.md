@@ -1,7 +1,7 @@
 # Introduction to Circuit Design and SPICE simulations
 Circuit design is the creation of electronic circuits to perform specific functions by connecting components in an optimized way. SPICE simulation is a computer-based tool that models and analyzes these circuits mathematically before physical construction, predicting their behavior under various conditions for verification and optimization.
 ---
-## Why do we need SPICE simulation ?
+## 1. Why do we need SPICE simulation ?
 
 | **Purpose**                 | **What SPICE Does**                                | **Example Application**                   |
 | --------------------------- | -------------------------------------------------- | ----------------------------------------- |
@@ -11,29 +11,36 @@ Circuit design is the creation of electronic circuits to perform specific functi
 | **Design Optimization**     | Tunes parameters for best performance              | Adjust bias or feedback for stability     |
 | **PVT Validation**          | Tests circuit under multiple real-world conditions | Compare `tt`, `ff`, `ss` corner responses |
 ---
-## Circuit Diagram Of Inverter
+### Circuit Diagram Of Inverter
 ![](https://github.com/thaaroonesaec24-crypto/Week-4-RISC-V-tapeout-program/blob/main/DAY%201/images/Screenshot%202025-10-15%20230043.png)
 
-## SPICE Simulation 
+### SPICE Simulation 
 ![](https://github.com/thaaroonesaec24-crypto/Week-4-RISC-V-tapeout-program/blob/main/DAY%201/images/Screenshot%202025-10-15%20225424.png)
+
+---
+
+Here’s your content refined to a **professional GitHub-ready format**, maintaining all your original sections and structure while improving tone, consistency, formatting, and readability — ideal for documentation or technical report inclusion.
 
 ---
 
 ## Understanding Delay Tables in Digital Timing Analysis
 
-In modern digital design, **cell delay** is not a constant parameter. Instead, it varies dynamically depending on multiple electrical conditions. Two primary factors influence the propagation delay of a standard cell:
+In modern digital design, **cell delay** is not constant; it dynamically depends on electrical conditions. Two major parameters influence the propagation delay of a standard cell:
 
-1. **Input Slew** – The rate at which the input signal transitions between logic levels.
-2. **Output Load** – The total capacitance that the output node must drive.
+1. **Input Slew** – The rate at which an input signal transitions between logic levels.
+2. **Output Load** – The total capacitance driven by the output node.
 
-To model these dependencies, **delay information is represented in two-dimensional lookup tables (2D-LUTs)**, commonly stored within Liberty (`.lib`) files used by Static Timing Analysis (STA) tools.
+To capture these dependencies, delay information is stored in **two-dimensional lookup tables (2D-LUTs)**, typically within Liberty (`.lib`) files used by Static Timing Analysis (STA) tools.
 
 ---
+
 ![Delay table]()
+
 ---
+
 ### Structure of a Delay Lookup Table
 
-Each standard cell, such as a buffer (e.g., `CBUF`), includes delay tables that define how propagation delay changes with varying input and output conditions.
+Each standard cell, such as a buffer (e.g., `CBUF`), includes delay tables defining how propagation delay varies with input and output conditions.
 
 | **Table Axis** | **Represents** | **Example Values**                    |
 | -------------- | -------------- | ------------------------------------- |
@@ -43,24 +50,26 @@ Each standard cell, such as a buffer (e.g., `CBUF`), includes delay tables that 
 
 For instance:
 
-* **CBUF1** might have delay entries labeled *d1–d24*.
-* **CBUF2** might have delay entries labeled *e1–e24*.
+* **CBUF1** may contain delay entries labeled *d1–d24*.
+* **CBUF2** may contain delay entries labeled *e1–e24*.
 
-During STA, the tool interpolates between these values to determine the **actual delay** for a given combination of slew and load conditions. This ensures realistic and process-aware timing estimation.
+During STA, the timing tool interpolates between these entries to determine the **effective delay** for a given combination of slew and load. This ensures realistic, process-aware delay modeling for accurate analysis.
 
 ---
 
 ### Calculating Total Output Capacitance
 
-When a cell output drives multiple fanout cells or nets, the **total output capacitance** seen by that cell is the sum of all capacitive loads connected to its output node. These loads include:
+When a cell output drives multiple fanout cells or nets, the **total output capacitance** observed at that output node equals the sum of all connected loads. These include:
 
 * Input capacitances of driven cells
-* Capacitance from interconnect (wire segments)
+* Capacitance from interconnects (wire segments)
 * Intrinsic output capacitance of the driving cell
 
-In CMOS-based designs, only input pins contribute capacitive loads, as they do not draw DC current.
+In CMOS technology, input pins contribute only capacitive loads, as they draw negligible DC current.
 
----
+```text
+C_total = C_pin_output + Σ(C_pin_input_fanouts) + Σ(C_wire_segments)
+```
 
 #### Example: Total Capacitance Estimation
 
@@ -74,62 +83,221 @@ In CMOS-based designs, only input pins contribute capacitive loads, as they do n
 
 ### Key Takeaway
 
-Delay tables bridge the gap between **library characterization** and **timing verification**, allowing STA tools like OpenSTA to perform accurate delay interpolation. By considering both **input slew** and **output load**, designers can evaluate true circuit performance under realistic operating conditions.
-
----
-Here’s a **professionally rewritten and unidentifiable** version of your “Delay Calculation from LUTs” section — polished for use in a GitHub README or technical report (fits perfectly after the “Understanding Delay Tables” section):
+Delay tables provide the bridge between **library characterization** and **timing verification**, enabling STA tools like OpenSTA to perform accurate interpolation of delay values. By accounting for both **input slew** and **output load**, designers can achieve precise timing closure and realistic circuit performance evaluation.
 
 ---
 
-### Example 1: Interpolating Delay for Intermediate Load Values
+## Module 2: NMOS Transistor Physics
 
-Consider a buffer cell (`CBUF1`) where we need to determine the propagation delay under the following conditions:
+### Transistor Structure and Operation
 
-* **Input Slew:** 40 ps
-* **Output Load:** 60 fF
+An NMOS transistor has four terminals:
 
-However, 60 fF does **not** exactly appear in the table. The closest available load points are:
+* **Gate (G)** – Controls the channel conductivity
+* **Drain (D)** – Acts as current output
+* **Source (S)** – Serves as current input
+* **Bulk/Body (B)** – Substrate connection
 
-| **Load (fF)** | **Delay Value** |
-| ------------- | --------------- |
-| 50 fF         | x₉              |
-| 70 fF         | x₁₀             |
-
-To estimate the delay for 60 fF, we apply **linear interpolation** between these two entries:
-
-[
-\text{Delay}*{60fF} = x_9 + \frac{(60 - 50)}{(70 - 50)} \times (x*{10} - x_9)
-]
-
-This formula proportionally estimates the delay between the two known points, providing an accurate timing value for intermediate conditions.
+<p align="center">
+  <img src="Images/nmos_structure.png" alt="NMOS Structure" width="500"/>
+  <br>
+  <em>Figure 6: NMOS Transistor Physical Structure</em>
+</p>
 
 ---
 
-### Example 2: Direct Lookup for Exact Match
+### Operating Regions
 
-Now consider another buffer cell (`CBUF2`) with the following parameters:
+Let:
 
-* **Input Slew:** 60 ps
-* **Output Load:** 50 fF
+> **V_GS** → Gate-to-source voltage
+> **V_th** → Threshold voltage
 
-In this case, the 50 fF column exists directly in the LUT, so **no interpolation** is required. The delay can be extracted straight from the table:
+**Surface Inversion:**
+Occurs when a strong positive gate voltage inverts the p-type substrate surface to n-type, forming a conductive channel.
 
-| **Condition** | **Value** |
-| ------------- | --------- |
-| Input Slew    | 60 ps     |
-| Output Load   | 50 fF     |
-| LUT Entry     | y₁₅       |
+| **Region**        | **Condition**                       | **Description**                                               |
+| ----------------- | ----------------------------------- | ------------------------------------------------------------- |
+| **Cut-off**       | `V_GS < V_th`                       | No inversion; drain current ≈ 0 (leakage only)                |
+| **Linear/Triode** | `V_GS > V_th`, `V_DS < V_GS - V_th` | Channel forms; behaves as voltage-controlled resistor         |
+| **Saturation**    | `V_GS > V_th`, `V_DS ≥ V_GS - V_th` | Channel pinches off; current mainly depends on (V_GS - V_th)² |
 
-Hence, the propagation delay for `CBUF2` under these conditions is **y₁₅**.
+---
+
+### Modified Threshold Voltage (Body Effect)
+
+<p align="center">
+  <img src="Images/threshold_eqn.png" alt="Body Effect Equation" width="400"/>
+</p>
+
+```text
+V_th(V_SB) = V_th0 + γ × [√(|2φ_F| + V_SB) - √(|2φ_F|)]
+```
+
+Where:
+
+* **γ** – Body effect coefficient (process-dependent)
+* **φ_F** – Fermi potential
+* **V_th0** – Zero-bias threshold voltage
+
+Increasing body-source voltage widens the depletion region, raising the effective threshold voltage — a key factor in stacked transistor behavior.
 
 ---
 
-### ⚠️ Important Consideration
+### Current Equations
 
-If either the input slew or output load lies **outside the characterized LUT range** (for example, <10 fF or >110 fF), the STA tool performs **extrapolation** to predict delay values.
-However, extrapolated results are **less accurate** and may deviate from actual transistor-level (SPICE) behavior. Therefore, designers should strive to operate within the defined characterization limits for reliable timing closure.
+#### Cutoff Region
+
+```text
+V_GS < V_th:
+No inversion layer formed → negligible current
+Only leakage through reverse-biased junctions (pA–nA)
+```
+
+#### Linear Region
+
+```spice
+I_D = μ_n × C_ox × (W/L) × [(V_GS - V_th) × V_DS - (V_DS² / 2)]
+```
+
+#### Saturation Region
+
+```spice
+I_Dsat = (μ_n × C_ox × W) / (2L) × (V_GS - V_th)² × (1 + λ × V_DS)
+```
+
+| Symbol   | Meaning                              |
+| -------- | ------------------------------------ |
+| **μ_n**  | Electron mobility                    |
+| **C_ox** | Gate oxide capacitance per unit area |
+| **W/L**  | Transistor aspect ratio              |
+| **λ**    | Channel-length modulation factor     |
 
 ---
+
+### Drift Current Mechanism
+
+Current arises from **carrier drift** under an applied electric field:
+
+```text
+v_drift = μ_n × E_field
+I_D = Q_i(x) × v(x) × W
+```
+
+This forms the physical foundation for MOSFET current equations derived from semiconductor physics.
+
+---
+
+## Module 3: Hands-on SPICE Simulation
+
+### Simulation Hierarchy
+
+VLSI design employs multiple abstraction layers during simulation and analysis.
+
+<p align="center">
+  <img src="Images/spice_working.png" alt="Simulation Hierarchy" width="650"/>
+  <br>
+  <em>Figure 12: VLSI Design Simulation Hierarchy</em>
+</p>
+
+| **Level**        | **Example Tools**      | **Purpose**                          |
+| ---------------- | ---------------------- | ------------------------------------ |
+| **Process**      | SUPREME, TCAD          | Model fabrication and doping effects |
+| **Circuit**      | SPICE, Spectre, HSPICE | Transistor-level electrical analysis |
+| **Logic**        | ModelSim, VCS, Questa  | Gate-level and RTL verification      |
+| **Architecture** | Gem5, SystemC          | System-level performance estimation  |
+
+---
+
+### SPICE Analysis Types
+
+| **Analysis Type**      | **Command** | **Description / Use Case**                         |
+| ---------------------- | ----------- | -------------------------------------------------- |
+| **DC Operating Point** | `.op`       | Calculates steady-state node voltages and currents |
+| **DC Sweep**           | `.dc`       | Produces I–V characteristics over a voltage range  |
+| **Transient**          | `.tran`     | Analyzes time-domain responses and waveforms       |
+| **AC**                 | `.ac`       | Determines small-signal frequency response         |
+| **Noise**              | `.noise`    | Characterizes device noise behavior                |
+
+---
+
+### SPICE Netlist Syntax
+
+#### Component Declaration
+
+**MOSFET:**
+
+```spice
+M<n> <drain> <gate> <source> <bulk> <model> W=<width> L=<length>
+```
+
+**Resistor:**
+
+```spice
+R<n> <node1> <node2> <resistance>
+```
+
+**Voltage Source:**
+
+```spice
+V<n> <positive_node> <negative_node> <DC_value>
+```
+
+<p align="center">
+  <img src="Images/example_for_spice_netlist_syntax.png" alt="SPICE Netlist Syntax Example" width="500"/>
+  <br>
+  <em>Figure 13: Example of SPICE Netlist Syntax</em>
+</p>
+
+---
+
+### Example: NMOS Characterization Circuit
+
+<p align="center">
+  <img src="Images/nmos_inverter.png" alt="NMOS Test Circuit" width="500"/>
+  <br>
+  <em>Figure 14: NMOS Characterization Test Circuit</em>
+</p>
+
+```spice
+* Model Description
+.param temp=27
+.lib "sky130_fd_pr/models/sky130.lib.spice" tt
+
+* NMOS Characterization Circuit
+XM1 Vdd n1 0 0 sky130_fd_pr__nfet_01v8 w=5 l=2
+R1 n1 in 55
+Vdd vdd 0 1.8V
+Vin in 0 1.8V
+
+* Simulation Commands
+.op
+.dc Vdd 0 1.8 0.1 Vin 0 1.8 0.2
+
+.control
+run
+display
+setplot dc1
+.endc
+.end
+```
+
+---
+
+### Netlist Breakdown
+
+| **Line**            | **Component**   | **Description**                          |
+| ------------------- | --------------- | ---------------------------------------- |
+| `M1 vdd n1 0 0 ...` | NMOS transistor | Drain=vdd, Gate=n1, Source=GND, Bulk=GND |
+| `R1 in n1 55`       | Gate resistor   | 55 Ω resistor limits input current       |
+| `Vdd vdd 0 1.8`     | Power source    | DC supply voltage                        |
+| `Vin in 0 1.8`      | Input voltage   | Controls gate bias                       |
+| `.dc Vdd 0 1.8 0.1` | DC sweep        | Sweeps V_DS with 0.1V steps              |
+
+---
+
+Would you like me to format the **SPICE command explanation table** (`ngspice day1_nfet_idvds_L2_W5.spice`, `plot -vdd#branch`) in the same professional GitHub style to follow this section?
+
 
 ## DAY 1 LAB
 Step 1 : Clone the repo
