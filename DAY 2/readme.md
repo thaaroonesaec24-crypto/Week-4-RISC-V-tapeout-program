@@ -1,3 +1,48 @@
 ##  Lab with sky130 models
-![alttext](<img width="372" height="387" alt="Screenshot 2025-10-15 230043" src="https://github.com/user-attachments/assets/c04450f6-db0a-413d-9049-71d5333537f0" />
-)
+<details> <summary><strong>day2_nfet_idvds_L015_W039.spice </strong></summary>
+
+ *Model Description
+  
+.param temp=27
+
+
+*Including sky130 library files
+
+.lib "sky130_fd_pr/models/sky130.lib.spice" tt
+
+
+*Netlist Description
+
+
+
+XM1 Vdd n1 0 0 sky130_fd_pr__nfet_01v8 w=0.39 l=0.15
+
+R1 n1 in 55
+
+Vdd vdd 0 1.8V
+Vin in 0 1.8V
+
+*simulation commands
+
+.op
+.dc Vdd 0 1.8 0.1 Vin 0 1.8 0.2
+
+.control
+
+run
+display
+setplot dc1
+.endc
+
+.end
+
+</details>
+
+
+**plot the waveforms in ngspice**
+
+```
+ngspice day2_nfet_idvds_L015_W039.spice 
+plot -vdd#branch
+```
+
