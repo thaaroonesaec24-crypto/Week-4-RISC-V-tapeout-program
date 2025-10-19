@@ -1,10 +1,5 @@
 
-Perfect ✅ — since your section headers already use Markdown headings (like `#`, `##`, `###`), GitHub automatically generates **anchors** based on them.
 
-Here’s your **final Table of Contents** with working clickable links (for GitHub README navigation).
-Each link directly matches the `#` headers in your document 👇
-
----
 
 #  **Table of Contents**
 
@@ -28,12 +23,7 @@ Each link directly matches the `#` headers in your document 👇
 
 ---
 
-### 🧩 **Tip**
 
-When you paste this at the top of your README:
-
-* GitHub automatically turns each link into a **scrollable anchor**.
-* The anchors are **case-insensitive** and **ignore bold/italics/special characters**, so this format will work perfectly with your headers.
 
 
 #  SPICE Simulation for Lower Technology Nodes
