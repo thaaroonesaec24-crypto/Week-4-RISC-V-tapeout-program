@@ -17,9 +17,6 @@ Circuit design is the creation of electronic circuits to perform specific functi
 ### SPICE Simulation 
 ![](https://github.com/thaaroonesaec24-crypto/Week-4-RISC-V-tapeout-program/blob/main/DAY%201/images/Screenshot%202025-10-15%20225424.png)
 
----
-
-Here’s your content refined to a **professional GitHub-ready format**, maintaining all your original sections and structure while improving tone, consistency, formatting, and readability — ideal for documentation or technical report inclusion.
 
 ---
 
@@ -87,7 +84,7 @@ Delay tables provide the bridge between **library characterization** and **timin
 
 ---
 
-## Module 2: NMOS Transistor Physics
+# NMOS Transistor Physics
 
 ### Transistor Structure and Operation
 
@@ -97,12 +94,6 @@ An NMOS transistor has four terminals:
 * **Drain (D)** – Acts as current output
 * **Source (S)** – Serves as current input
 * **Bulk/Body (B)** – Substrate connection
-
-<p align="center">
-  <img src="Images/nmos_structure.png" alt="NMOS Structure" width="500"/>
-  <br>
-  <em>Figure 6: NMOS Transistor Physical Structure</em>
-</p>
 
 ---
 
@@ -125,10 +116,6 @@ Occurs when a strong positive gate voltage inverts the p-type substrate surface 
 ---
 
 ### Modified Threshold Voltage (Body Effect)
-
-<p align="center">
-  <img src="Images/threshold_eqn.png" alt="Body Effect Equation" width="400"/>
-</p>
 
 ```text
 V_th(V_SB) = V_th0 + γ × [√(|2φ_F| + V_SB) - √(|2φ_F|)]
@@ -188,7 +175,7 @@ This forms the physical foundation for MOSFET current equations derived from sem
 
 ---
 
-## Module 3: Hands-on SPICE Simulation
+# Hands-on SPICE Simulation
 
 ### Simulation Hierarchy
 
@@ -243,21 +230,12 @@ R<n> <node1> <node2> <resistance>
 V<n> <positive_node> <negative_node> <DC_value>
 ```
 
-<p align="center">
-  <img src="Images/example_for_spice_netlist_syntax.png" alt="SPICE Netlist Syntax Example" width="500"/>
-  <br>
-  <em>Figure 13: Example of SPICE Netlist Syntax</em>
-</p>
 
 ---
 
 ### Example: NMOS Characterization Circuit
 
-<p align="center">
-  <img src="Images/nmos_inverter.png" alt="NMOS Test Circuit" width="500"/>
-  <br>
-  <em>Figure 14: NMOS Characterization Test Circuit</em>
-</p>
+
 
 ```spice
 * Model Description
@@ -296,7 +274,7 @@ setplot dc1
 
 ---
 
-Would you like me to format the **SPICE command explanation table** (`ngspice day1_nfet_idvds_L2_W5.spice`, `plot -vdd#branch`) in the same professional GitHub style to follow this section?
+
 
 
 ## DAY 1 LAB
