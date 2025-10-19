@@ -1,4 +1,20 @@
 
+## Table of Contents
+
+1. [Voltage Transfer Characteristics and SPICE Simulations](#voltage-transfer-characteristics-and-spice-simulations)
+2. [CMOS Inverter SPICE Deck Structure](#cmos-inverter-spice-deck-structure)
+3. [Simulation Objectives and Insights](#simulation-objectives-and-insights)
+4. [Key Takeaways](#key-takeaways)
+5. [Benefits of CMOS Switching Threshold and Dynamic Simulations](#benefits-of-cmos-switching-threshold-and-dynamic-simulations)
+6. [Labs Sky130 SPICE Simulation for CMOS](#labs-sky130-spice-simulation-for-cmos)
+7. [Voltage Transfer Characteristics vs. Transient Analysis](#voltage-transfer-characteristics-vs-transient-analysis)
+8. [Rise and Fall Time Calculation](#rise-and-fall-time-calculation)
+9. [Comparison: DC Sweep vs. Transient Simulation](#comparison-dc-sweep-vs-transient-simulation)
+10. [Static Behavior Evaluation — CMOS Inverter Robustness](#static-behavior-evaluation--cmos-inverter-robustness)
+11. [Switching Threshold Voltage (Vm)](#switching-threshold-voltage-vm)
+12. [Regions of Operation Around Vm](#regions-of-operation-around-vm)
+13. [Current Balancing and Sizing Ratios](#current-balancing-and-sizing-ratios)
+14. [Summary](#summary)
 
 ##  CMOS Switching Threshold and Dynamic Simulations
 ---
